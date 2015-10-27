@@ -9,7 +9,9 @@
   "author": "Keith Chester <kchester@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "async": "^1.5.0",
     "johnny-five": "^0.9.1",
-    "node-pixel": "^0.4.1"
+    "node-pixel": "^0.4.1",
+    "serialport": "^2.0.2"
   }
 }
