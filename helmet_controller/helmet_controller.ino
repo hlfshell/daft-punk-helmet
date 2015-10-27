@@ -20,8 +20,6 @@ void loop() {
   //Check to see if we have data
   if(Serial.available()){
     char inChar = Serial.read();
-    Serial.println("Char recieved");
-    Serial.println(inChar);
     if(inChar == '\n') return;
 //    Serial.println(inChar);
     rgb[finishedPixel++] = inChar;

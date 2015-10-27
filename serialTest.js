@@ -28,7 +28,9 @@ serialPort.open(function (error) {
 	};
 	var write = function(input, cb){
 		serialPort.write(input, function(){
-			serialPort.drain(cb);
+			serialPort.drain(function(){
+				setTimeout(cb, 100);
+			});
 		});
 		// serialPort.write(new Buffer([input]), function(err, results) {
 		// 	if(err) console.log('ERROR: ' + err);
