@@ -1,5 +1,5 @@
 var SerialPort = require("serialport").SerialPort
-var serialPort = new SerialPort("COM9", {
+var serialPort = new SerialPort(process.argv[2], {
   baudrate: 115200,
   // parser: require("serialport").parsers.readline("\n")
 }, false);
@@ -19,7 +19,7 @@ serialPort.open(function (error) {
   } else {
     console.log('open');
     serialPort.on('data', function(data) {
-      console.log('>>',data);
+      console.log('>>',data.toString("utf-8"));
     });
 	var drain = function(cb){
 		// setTimeout(function(){ serialPort.drain(cb) }, 100);
@@ -29,7 +29,8 @@ serialPort.open(function (error) {
 	var write = function(input, cb){
 		serialPort.write(input, function(){
 			serialPort.drain(function(){
-				setTimeout(cb, 100);
+				// setTimeout(cb, 100);
+				cb();
 			});
 		});
 		// serialPort.write(new Buffer([input]), function(err, results) {
@@ -48,19 +49,23 @@ serialPort.open(function (error) {
 		// cb();			
 	};
 
-	async.eachSeries(
-		[255, 0, 0, 0, 255, 0],
-		// [1,2,3,4,5,6],
-		function(input, done){
-			console.log("writing input", input, String.fromCharCode(input), input.toString());
-			// write(String.fromCharCode(input), done);
-			write(String.fromCharCode(input), done);
-		},
-		function(err){
-			console.log(err);
-			console.log("Done");
-		}
-	);
+	setTimeout(function(){
+		async.eachSeries(
+			// [13, 13, 13, 13, 13, 254, 13, 0, 1, 254, 0],
+			// [13, 13, 13, 13, 13, 123, 13, 0, 1, 127, 0],
+			[255, 0, 0, 0, 255, 0],
+			function(input, done){
+				console.log("writing input", input, String.fromCharCode(input), input.toString());
+				// write(String.fromCharCode(input), done);
+				// write(String.fromCharCode(input), done);
+				write(input.toString() + "x", done);
+			},
+			function(err){
+				console.log(err);
+				console.log("Done");
+			}
+		);
+	}, 5000);
 
   }
 });
